@@ -4,11 +4,23 @@
   "description": "SFV Discord bot helper",
   "main": "main.js",
   "scripts": {
+    "start": "node .",
+    "commands": "node deploy-commands.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "bappie",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^13.2.0"
+    "@discordjs/builders": "^0.6.0",
+    "@discordjs/rest": "*",
+    "discord-api-types": "^0.23.1",
+    "discord.js": "^13.2.0",
+    "dotenv": "^10.0.0",
+    "fuse.js": "^6.4.6",
+    "node-fetch": "^2.6.5"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.1",
+    "nodemon": "^2.0.14"
   }
 }
