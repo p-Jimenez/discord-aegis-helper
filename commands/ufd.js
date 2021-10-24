@@ -1,7 +1,8 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
 const Fuse = require('fuse.js');
 const fetch = require('node-fetch');
+const { MessageActionRow, MessageSelectMenu } = require('discord.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { buildEmbedMove, getMoves } = require('../lib');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -20,63 +21,39 @@ module.exports = {
 
 		if (results.length > 0) {
 
-			const move = results[0].item;
-			const message = new MessageEmbed()
-				.setColor('#71368A')
-				.setTitle(move.name)
-				.setThumbnail('https://game.capcom.com/cfn/sfv/as/img/character/thum/urn.png?h=8bb40555d0a2e4f9766e75d5a1cbd8d9')
-				.addFields(
-					{ name: 'Input', value: move.tradNot },
-					{ name: '\u200B', value: '\u200B' },
-					{ name: 'Start Up', value: move.startup.toString(), inline: true },
-					{ name: 'Active', value: existy(move.active) ? move.active.toString() || 0 : '\u200B', inline: true },
-					{ name: 'Recovery', value: existy(move.recovery) ? move.recovery.toString() || 0 : '\u200B', inline: true },
-					{ name: '\u200B', value: '\u200B' },
-					{ name: 'On hit', value: existy(move.onHit) ? move.onHit.toString() || 0 : '\u200B', inline: true },
-					{ name: 'On block', value: existy(move.onBlock) ? move.onBlock.toString() || 0 : '\u200B', inline: true },
-					{ name: '\u200B', value: '\u200B' },
-					{ name: 'Damage', value: existy(move.damage) ? move.damage.toString() || 0 : '\u200B', inline: true },
-					{ name: 'Stun', value: existy(move.stun) ? move.stun.toString() || 0 : '\u200B', inline: true }
-				);
-
-			if (move.description) {
-				let description = "";
-				move.description.forEach((element, index) => {
-					description += element;
-					description += index != (move.description.length - 1) ? '\n': '';
-				});
+			if (results.length == 1) {
+				buildEmbedMove(results[0].item);
+				await interaction.editReply({ embeds: [message] });
 			}
 
-			await interaction.editReply({ embeds: [message] });
+
+			else {
+				const selectOptions = [];
+				for (let index = 0; index < Math.min(results.length, 5); index++) {
+					const move = results[index].item;
+					selectOptions.push({
+						label: move.name,
+						description: move.tradNot,
+						value: interaction.options.getString('move') + index.toString()
+					})
+				}
+
+				const row = new MessageActionRow()
+					.addComponents(
+						new MessageSelectMenu()
+							.setCustomId('select')
+							.setPlaceholder('Nothing selected')
+							.addOptions(selectOptions),
+					);
+
+				await interaction.editReply({ content: 'Select one move', components: [row] })
+			}
+
 		} else {
 			await interaction.editReply("The move you are trying to search wasn't found 🥺")
 		}
 	},
 };
-
-function getMoves(array) {
-	const movesArray = [];
-	for (const key in array) {
-		movesArray.push({
-			name: array[key].moveName,
-			tradNot: array[key].plnCmd,
-			numNot: array[key].numCmd,
-			startup: array[key].startup,
-			active: array[key].active,
-			recovery: array[key].recovery,
-			onHit: array[key].onHit,
-			onBlock: array[key].onBlock,
-			damage: array[key].damage,
-			stun: array[key].stun,
-			description: array[key].extraInfo
-		});
-	}
-	return movesArray;
-}
-
-function existy (x) {
-    return typeof (x) != 'undefined' && x != null;
-}
 
 /*
 {
