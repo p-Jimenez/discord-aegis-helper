@@ -5,6 +5,7 @@
   ### Street Fighter V Discord bot using [discord.js](https://discord.js.org/#/)
   [![discord.js](https://img.shields.io/badge/discord.js-7289da?logo=discord&logoColor=white)](https://discord.js.org/#/)
 
+  API from [https://github.com/D4RKONION/FAT](https://github.com/D4RKONION/FAT)
 
 </div>
 
