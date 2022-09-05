@@ -1,10 +1,11 @@
 const { MessageEmbed } = require("discord.js");
+const { thumbnails } = require("./thumbnails")
 
-exports.buildEmbedMove = function (move) {
+exports.buildEmbedMove = function (move, character) {
 	const message = new MessageEmbed()
 		.setColor('#71368A')
 		.setTitle(move.name)
-		.setThumbnail('https://game.capcom.com/cfn/sfv/as/img/character/thum/urn.png?h=8bb40555d0a2e4f9766e75d5a1cbd8d9')
+		.setThumbnail(thumbnails[character])
 		.addFields(
 			{ name: 'Input', value: move.tradNot },
 			{ name: '\u200B', value: '\u200B' },
@@ -25,7 +26,7 @@ exports.buildEmbedMove = function (move) {
 			description += element;
 			description += index != (move.description.length - 1) ? '\n' : '';
 		});
-        message.setDescription(description);
+		message.setDescription(description);
 	}
 
 	return message

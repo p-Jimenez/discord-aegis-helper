@@ -25,8 +25,8 @@ client.once('ready', () => {
 });
 
 client.on('interactionCreate', async interaction => {
+	
 	if (interaction.isCommand()) {
-		const { commandName } = interaction;
 
 		const command = client.commands.get(interaction.commandName);
 
@@ -41,17 +41,21 @@ client.on('interactionCreate', async interaction => {
 	}
 
 	if (interaction.isSelectMenu()) {
-		const { Urien } = await fetch('https://raw.githubusercontent.com/D4RKONION/fatsfvframedatajson/master/sfv.json').then(response => response.json());
-		const urienFramedata = getMoves(Urien.moves.normal);
-		const searchOptions = { threshold: 0.6, keys: ["tradNot"] };
-		const fuse = new Fuse(urienFramedata, searchOptions);
 		const term = interaction.values[0];
 
-		const results = fuse.search(term.slice(0,-1));
+		const [moveName, character, index] = term.split("/");
+
+		const data = await fetch(`https://fullmeter.com/fatfiles/release/SFV/SFVFrameData.json?ts=${Date.now()}`).then(response => response.json());
+
+		const framedata = getMoves(data[character].moves.normal);
+		const searchOptions = { threshold: 0.6, keys: ["tradNot"] };
+		const fuse = new Fuse(framedata, searchOptions);
+
+		const results = fuse.search(moveName);
 		
 		message = interaction.message.delete();
 
-		message = buildEmbedMove(results[parseInt(term.slice(term.length - 1))].item);
+		message = buildEmbedMove(results[parseInt(index)].item, character);
 		await interaction.channel.send({ embeds: [message] });
 	}
 
