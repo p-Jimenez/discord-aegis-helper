@@ -12,10 +12,11 @@
 </div>
 
 <div>
-  #TODO
+
+  ## TODO
   
   - [ ] Rebuild in TypeScript
-  - [ ] Refactor code (messy as hell right now)
+  - [ ] Refactor code (messy as hell right now, probably should remake it all over again)
   - [ ] Improve search functionality
   - [ ] Make actual docs
 </div>
