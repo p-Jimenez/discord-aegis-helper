@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 // Require the necessary discord.js classes
 const Fuse = require('fuse.js');
 const fetch = require('node-fetch');
