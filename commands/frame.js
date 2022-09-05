@@ -4,64 +4,11 @@ const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { buildEmbedMove, getMoves } = require('../lib');
 
-const SFV_CHARACTERS = [
-	'Abigail',
-	'Akira',
-	'Akuma',
-	'Alex',
-	'Balrog',
-	'Birdie',
-	'Blanka',
-	'Cammy',
-	'Chun-Li',
-	'Cody',
-	'Dan',
-	'Dhalsim',
-	'E.Honda',
-	'Ed',
-	'Falke',
-	'F.A.N.G',
-	'G',
-	'Gill',
-	'Guile',
-	'Ibuki',
-	'Juri',
-	'Kage',
-	'Karin',
-	'Ken',
-	'Kolin',
-	'Laura',
-	'Lucia',
-	'Luke',
-	'M.Bison',
-	'Menat',
-	'Nash',
-	'Necalli',
-	'Oro',
-	'Poison',
-	'Rashid',
-	'R.Mika',
-	'Rose',
-	'Ryu',
-	'Sagat',
-	'Sakura',
-	'Seth',
-	'Urien',
-	'Vega',
-	'Zangief',
-	'Zeku (Old)',
-	'Zeku (Young)',
-];
-
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('frame')
 		.setDescription('Character Frame Data')
 		.addStringOption(option => option.setName('character').setDescription('Character').setRequired(true))
-		// // limit to first 25 characters
-		// .addStringOption(option => option.setName('characterList1').setDescription('Character').addChoices(SFV_CHARACTERS.filter((_, i) => i < 25).map(c => [c, c])))
-		// // get the rest of the characters
-		// .addStringOption(option => option.setName('characterList2').setDescription('Character').addChoices(SFV_CHARACTERS.filter((_, i) => i >= 25).map(c => [c, c])))
 		.addStringOption(option => option.setName('move').setDescription('Input+Button (d+LP; b,f+LK; qcf+LP, f+MP > f+HP)').setRequired(true)),
 	async execute(interaction) {
 		await interaction.deferReply();
