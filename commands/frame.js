@@ -19,8 +19,7 @@ module.exports = {
 		const characters = Object.keys(data);
 		const characterFuse = new Fuse(characters, { threshold: 0.8, keys: ["tradNot"] });
 
-		// fang gets corrected as zangief for some reason that i dont know
-		const characterTerm = interaction.options.getString('character').toLowerCase() === "fang" ? "F.A.N.G" : interaction.options.getString('character');
+		const characterTerm = interaction.options.getString('character').replace(/\./g, '');
 
 		const character = characterFuse.search(characterTerm);
 
@@ -30,7 +29,10 @@ module.exports = {
 
 		console.log("character", character[0].item);
 
-		const framedata = getMoves(data[character[0].item]?.moves.normal);
+		const framedata = getMoves(Object.keys(data[character[0].item]?.moves.normal).reduce((acc, key) =>
+			acc[key.replace(/\./g, '')] = data[character[0].item]?.moves.normal[key],
+			{})
+		);
 
 		const framedataFuse = new Fuse(framedata, searchOptions);
 
