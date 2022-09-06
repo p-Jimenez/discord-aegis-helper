@@ -2,7 +2,7 @@ const Fuse = require('fuse.js');
 const fetch = require('node-fetch');
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { buildEmbedMove, getMoves } = require('../lib');
+const { buildEmbedMove, getMoves, renameKeys } = require('../lib');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -14,13 +14,17 @@ module.exports = {
 		await interaction.deferReply();
 		const data = await fetch(`https://fullmeter.com/fatfiles/release/SFV/SFVFrameData.json?ts=${Date.now()}`).then(response => response.json());
 
+		const renamedData = renameKeys(data, Object.keys(data).reduce((acc, key) => {
+			acc[key] = key.replace(/\./g, '');
+			return acc;
+		}, {}));
+
 		const searchOptions = { threshold: 0.6, keys: ["tradNot"] };
 
-		const characters = Object.keys(data);
-		const characterFuse = new Fuse(characters, { threshold: 0.8, keys: ["tradNot"] });
+		const characters = Object.keys(renamedData);
 
+		const characterFuse = new Fuse(characters, { threshold: 0.9, keys: ["tradNot"] });
 		const characterTerm = interaction.options.getString('character').replace(/\./g, '');
-
 		const character = characterFuse.search(characterTerm);
 
 		if (character.length === 0) {
@@ -29,10 +33,7 @@ module.exports = {
 
 		console.log("character", character[0].item);
 
-		const framedata = getMoves(Object.keys(data[character[0].item]?.moves.normal).reduce((acc, key) =>
-			acc[key.replace(/\./g, '')] = data[character[0].item]?.moves.normal[key],
-			{})
-		);
+		const framedata = getMoves(renamedData[character[0].item]?.moves.normal);
 
 		const framedataFuse = new Fuse(framedata, searchOptions);
 

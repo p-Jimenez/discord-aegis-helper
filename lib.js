@@ -52,6 +52,14 @@ exports.getMoves = function (array) {
 	return movesArray;
 }
 
+exports.renameKeys = function (obj, newKeys) {
+	const keyValues = Object.keys(obj).map(key => {
+		const newKey = newKeys[key] || key;
+		return { [newKey]: obj[key] };
+	});
+	return Object.assign({}, ...keyValues);
+}
+
 function existy(x) {
 	return typeof (x) != 'undefined' && x != null;
 }

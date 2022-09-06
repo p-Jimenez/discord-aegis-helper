@@ -5,7 +5,7 @@ const Fuse = require('fuse.js');
 const fetch = require('node-fetch');
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
-const { buildEmbedMove, getMoves } = require('./lib');
+const { buildEmbedMove, getMoves, renameKeys } = require('./lib');
 
 
 // Create a new client instance
@@ -49,11 +49,18 @@ client.on('interactionCreate', async interaction => {
 
 		const data = await fetch(`https://fullmeter.com/fatfiles/release/SFV/SFVFrameData.json?ts=${Date.now()}`).then(response => response.json());
 
-		const framedata = getMoves(data[character].moves.normal);
+		const renamedData = renameKeys(data, Object.keys(data).reduce((acc, key) => {
+			acc[key] = key.replace(/\./g, '');
+			return acc;
+		}, {}));
+
+		const framedata = getMoves(renamedData[character].moves.normal);
 		const searchOptions = { threshold: 0.6, keys: ["tradNot"] };
 		const fuse = new Fuse(framedata, searchOptions);
 
 		const results = fuse.search(moveName);
+
+		console.log("move", results[parseInt(index)]);
 		
 		message = interaction.message.delete();
 
