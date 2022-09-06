@@ -4,6 +4,8 @@
   
   ### Street Fighter V Discord bot using [discord.js](https://discord.js.org/#/)
   [![discord.js](https://img.shields.io/badge/discord.js-7289da?logo=discord&logoColor=white)](https://discord.js.org/#/)
+  
+  <img src="https://i.imgur.com/uxuhZWV.gif" />
 
   Pretty simple bot that lets you search all the information from a given move
 
